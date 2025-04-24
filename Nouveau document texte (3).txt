@@ -1,0 +1,407 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
+import { Book, SpellCheck, Sparkles, BrainCog, Layers } from "lucide-react";
+
+const categories = [
+  {
+    title: "Modal Verbs",
+    color: "bg-amber-700",
+    icon: <SpellCheck size={40} />,
+    tasks: [
+      {
+        question: "You ___ see a doctor about that cough.",
+        options: ["should", "might", "can", "mustn't"],
+        answer: "should"
+      },
+      {
+        question: "She ___ be at work right now.",
+        options: ["must", "could", "would", "can't"],
+        answer: "must"
+      },
+      {
+        question: "I ___ go to the party if I finish my homework.",
+        options: ["can", "might", "could", "should"],
+        answer: "might"
+      },
+      {
+        question: "He ___ wear a uniform at work.",
+        options: ["must", "might", "could", "can't"],
+        answer: "must"
+      },
+      {
+        question: "You ___ smoke here, it’s a non-smoking area.",
+        options: ["mustn't", "might", "can", "should"],
+        answer: "mustn't"
+      },
+      {
+        question: "They ___ come to the meeting if they're busy.",
+        options: ["can", "might", "must", "should"],
+        answer: "might"
+      },
+      {
+        question: "We ___ leave early tomorrow.",
+        options: ["can", "could", "should", "must"],
+        answer: "could"
+      },
+      {
+        question: "She ___ know the answer, but I’m not sure.",
+        options: ["must", "might", "should", "could"],
+        answer: "might"
+      },
+      {
+        question: "I ___ help you with your homework if you ask me.",
+        options: ["can", "must", "should", "could"],
+        answer: "can"
+      },
+      {
+        question: "We ___ take an umbrella; it looks like it’s going to rain.",
+        options: ["must", "could", "might", "should"],
+        answer: "should"
+      },
+      {
+        question: "You ___ eat too much junk food.",
+        options: ["shouldn't", "mustn't", "couldn't", "might not"],
+        answer: "shouldn't"
+      },
+      {
+        question: "I ___ get to the office early tomorrow.",
+        options: ["can", "might", "should", "must"],
+        answer: "must"
+      },
+    ],
+    quote: "With great grammar comes great power!"
+  },
+  {
+    title: "Grammar",
+    color: "bg-green-700",
+    icon: <Book size={40} />,
+    tasks: [
+      {
+        question: "Which is correct: 'She don’t like pizza' or 'She doesn’t like pizza'?",
+        options: ["She don’t like pizza", "She doesn’t like pizza"],
+        answer: "She doesn’t like pizza"
+      },
+      {
+        question: "Which is correct: 'He was running yesterday' or 'He was run yesterday'?",
+        options: ["He was running yesterday", "He was run yesterday"],
+        answer: "He was running yesterday"
+      },
+      {
+        question: "Which sentence is correct?",
+        options: ["I can speaks English", "I can speak English", "I can speaking English"],
+        answer: "I can speak English"
+      },
+      {
+        question: "Which is correct: 'We have been to the park' or 'We been to the park'?",
+        options: ["We have been to the park", "We been to the park"],
+        answer: "We have been to the park"
+      },
+      {
+        question: "Which is correct?",
+        options: ["They’s been working", "They’ve been working", "They’s been work"],
+        answer: "They’ve been working"
+      },
+      {
+        question: "Choose the correct option: 'I ___ a book right now.'",
+        options: ["reading", "read", "am reading", "reads"],
+        answer: "am reading"
+      },
+      {
+        question: "Choose the correct option: 'She ___ not here yesterday.'",
+        options: ["is", "was", "were", "has"],
+        answer: "was"
+      },
+      {
+        question: "Which is correct: 'I will gone to the store' or 'I will go to the store'?",
+        options: ["I will gone to the store", "I will go to the store"],
+        answer: "I will go to the store"
+      },
+      {
+        question: "Choose the correct sentence:",
+        options: ["She have two cats.", "She has two cats.", "She having two cats."],
+        answer: "She has two cats."
+      },
+      {
+        question: "Which sentence is grammatically correct?",
+        options: ["There are two apple in the basket", "There is two apple in the basket", "There are two apples in the basket"],
+        answer: "There are two apples in the basket"
+      },
+      {
+        question: "Which is correct: 'I did not went' or 'I did not go'?",
+        options: ["I did not went", "I did not go"],
+        answer: "I did not go"
+      },
+      {
+        question: "Choose the correct form: 'He ___ a lot of friends.'",
+        options: ["has", "have", "having", "had"],
+        answer: "has"
+      },
+      {
+        question: "Which sentence is correct?",
+        options: ["It is raining outside", "It are raining outside", "It raining outside"],
+        answer: "It is raining outside"
+      },
+    ],
+    quote: "Grammar is the spellbook of communication."
+  },
+  {
+    title: "Vocabulary",
+    color: "bg-yellow-700",
+    icon: <Sparkles size={40} />,
+    tasks: [
+      {
+        question: "Choose the synonym of 'happy':",
+        options: ["sad", "angry", "joyful", "tired"],
+        answer: "joyful"
+      },
+      {
+        question: "Choose the antonym of 'strong':",
+        options: ["weak", "brave", "sturdy", "heavy"],
+        answer: "weak"
+      },
+      {
+        question: "Choose the synonym of 'quick':",
+        options: ["slow", "fast", "lazy", "strong"],
+        answer: "fast"
+      },
+      {
+        question: "Choose the antonym of 'big':",
+        options: ["small", "tall", "huge", "short"],
+        answer: "small"
+      },
+      {
+        question: "Choose the correct meaning of 'benevolent':",
+        options: ["kind", "cruel", "unfriendly", "strict"],
+        answer: "kind"
+      },
+      {
+        question: "What is the opposite of 'beautiful'?",
+        options: ["ugly", "charming", "handsome", "pretty"],
+        answer: "ugly"
+      },
+      {
+        question: "Choose the synonym of 'difficult':",
+        options: ["easy", "hard", "simple", "smooth"],
+        answer: "hard"
+      },
+      {
+        question: "What does 'loquacious' mean?",
+        options: ["silent", "talkative", "sad", "happy"],
+        answer: "talkative"
+      },
+      {
+        question: "Choose the antonym of 'cheap':",
+        options: ["expensive", "costly", "affordable", "affordable"],
+        answer: "expensive"
+      },
+      {
+        question: "Which word is a synonym of 'courage'?",
+        options: ["fear", "bravery", "cowardice", "shame"],
+        answer: "bravery"
+      },
+      {
+        question: "Which of these is an antonym of 'wet'?",
+        options: ["dry", "wet", "sticky", "soaked"],
+        answer: "dry"
+      },
+      {
+        question: "What does 'benevolent' mean?",
+        options: ["kind", "strict", "harsh", "evil"],
+        answer: "kind"
+      },
+    ],
+    quote: "A rich vocabulary is your magic wand."
+  },
+  {
+    title: "Idioms",
+    color: "bg-green-700",
+    icon: <BrainCog size={40} />,
+    tasks: [
+      {
+        question: "What does 'break the ice' mean?",
+        options: ["Destroy something cold", "Start a conversation", "Fall down", "Fight"],
+        answer: "Start a conversation"
+      },
+      {
+        question: "What does 'hit the nail on the head' mean?",
+        options: ["To miss the point", "To do something perfectly", "To avoid work", "To start something difficult"],
+        answer: "To do something perfectly"
+      },
+      {
+        question: "What does 'kick the bucket' mean?",
+        options: ["To begin a journey", "To fall asleep", "To die", "To get angry"],
+        answer: "To die"
+      },
+      {
+        question: "What does 'under the weather' mean?",
+        options: ["Not feeling well", "Cold weather", "Being lucky", "On vacation"],
+        answer: "Not feeling well"
+      },
+      {
+        question: "What does 'a blessing in disguise' mean?",
+        options: ["A hidden treasure", "Something good that seems bad at first", "A lucky event", "An annoying person"],
+        answer: "Something good that seems bad at first"
+      },
+      {
+        question: "What does 'the ball is in your court' mean?",
+        options: ["You're in charge", "You need to wait", "The game has started", "It’s time to play"],
+        answer: "You're in charge"
+      },
+      {
+        question: "What does 'beat around the bush' mean?",
+        options: ["Speak directly", "Avoid the main issue", "Hurry up", "Argue with someone"],
+        answer: "Avoid the main issue"
+      },
+      {
+        question: "What does 'burn the midnight oil' mean?",
+        options: ["To work late", "To relax", "To read", "To meditate"],
+        answer: "To work late"
+      },
+      {
+        question: "What does 'once in a blue moon' mean?",
+        options: ["Something that happens often", "Something rare", "Something that never happens", "A mistake"],
+        answer: "Something rare"
+      },
+      {
+        question: "What does 'a penny for your thoughts' mean?",
+        options: ["To express yourself", "To ask for money", "To talk about something", "To be quiet"],
+        answer: "To express yourself"
+      },
+      {
+        question: "What does 'jump on the bandwagon' mean?",
+        options: ["To start something new", "To join something popular", "To leave a group", "To start a business"],
+        answer: "To join something popular"
+      },
+      {
+        question: "What does 'let the cat out of the bag' mean?",
+        options: ["Keep a secret", "Reveal a secret", "Play with animals", "Close the door"],
+        answer: "Reveal a secret"
+      },
+    ],
+    quote: "Idioms add color to your magical speech."
+  }
+];
+
+export default function FantasyEnglishGame() {
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(null);
+  const [answers, setAnswers] = useState({}); // Track answers for each task
+  const [score, setScore] = useState({ correct: 0, wrong: 0 });
+
+  const currentCategory = selectedCategoryIndex !== null ? categories[selectedCategoryIndex] : null;
+
+  // Handle answer selection and backtracking
+  const handleAnswerSelection = (taskIndex, selectedOption) => {
+    setAnswers(prev => ({
+      ...prev,
+      [taskIndex]: selectedOption,
+    }));
+  };
+
+  const handleSubmit = () => {
+    let correctCount = 0;
+    let wrongCount = 0;
+
+    currentCategory.tasks.forEach((task, index) => {
+      if (answers[index] === task.answer) {
+        correctCount++;
+      } else {
+        wrongCount++;
+      }
+    });
+
+    setScore({ correct: correctCount, wrong: wrongCount });
+  };
+
+  return (
+    <div className="min-h-screen bg-[url('https://images.unsplash.com/photo-1607746882042-944635dfe10e')] bg-cover bg-center text-blue p-6 flex flex-col items-center">
+
+    
+      <motion.div
+        className="text-5xl md:text-7xl font-bold text-center mt-2 mb-10"
+        initial={{ opacity: 0, y: -100 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+      >
+        ✨ The roots of educations are bitter,but the fruit is sweet ✨
+      </motion.div>
+
+      <AnimatePresence>
+        {selectedCategoryIndex === null ? (
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {categories.map((cat, i) => (
+              <motion.div
+                key={i}
+                className={`cursor-pointer p-6 rounded-2xl shadow-lg text-center font-bold text-xl flex flex-col items-center gap-2 ${cat.color}`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setSelectedCategoryIndex(i)}
+              >
+                {cat.icon}
+                <span>{cat.title}</span>
+              </motion.div>
+            ))}
+          </motion.div>
+        ) : (
+          <motion.div
+            className={`w-full max-w-3xl bg-opacity-80 ${currentCategory.color}`}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+          >
+            <Card>
+              <CardContent className="flex flex-col gap-4 p-6">
+                <h2 className="text-3xl font-semibold">{currentCategory.title}</h2>
+
+                {/* Show all tasks on one page */}
+                {currentCategory.tasks.map((task, taskIndex) => (
+                  <div key={taskIndex} className="mb-6">
+                    <p className="text-xl text-green-500 font-bold">{task.question}</p>
+                    <div className="flex flex-col gap-2">
+                      {task.options.map((opt, i) => (
+                        <label key={i} className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            name={`task-${taskIndex}`}
+                            value={opt}
+                            checked={answers[taskIndex] === opt}
+                            onChange={() => handleAnswerSelection(taskIndex, opt)}
+                          />
+                          <span>{opt}</span>
+                        </label>
+                      ))}
+                    </div>
+                    {answers[taskIndex] && (
+                      <p className={`mt-2 text-lg ${answers[taskIndex] === task.answer ? "text-green-500" : "text-red-500"}`}>
+                        {answers[taskIndex] === task.answer ? "Correct!" : "Incorrect."}
+                      </p>
+                    )}
+                  </div>
+                ))}
+
+                <Button onClick={handleSubmit} className="bg-green-500 hover:bg-green-600 mt-4">
+                  Submit Answers
+                </Button>
+
+                {score.correct !== undefined && (
+                  <div className="mt-4">
+                    <h3 className="text-xl font-bold">Your Score:</h3>
+                    <p>{score.correct} correct, {score.wrong} wrong</p>
+                    <p className="text-lg italic mt-2">{currentCategory.quote}</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+            <Button className="bg-blue-500 hover:bg-blue-600 mt-4" onClick={() => setSelectedCategoryIndex(null)}>Back</Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
